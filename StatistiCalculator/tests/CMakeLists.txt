@@ -1,0 +1,6 @@
+
+set(TEST_DATASET_DIRECTORY "${TEST_DIRECTORY}/Dataset")
+include("${TEST_DATASET_DIRECTORY}/CMakeLists.txt")
+
+set(TEST_VECTOR_DIRECTORY "${TEST_DIRECTORY}/Vector")
+include("${TEST_VECTOR_DIRECTORY}/CMakeLists.txt")
