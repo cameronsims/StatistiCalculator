@@ -1,6 +1,8 @@
 #include <stat/statistical_analysis.h>
 
-#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>	// Need for PI
+
 #include <map>
 
 // Singular Variable //////////////////////////////////////////////////
@@ -60,7 +62,38 @@ statcalc::stat_t statcalc::stdev   (const VariableSet& p_data) {
 }
 
 statcalc::stat_t statcalc::stderror(const VariableSet& p_data) {
-	return statcalc::stdev(p_data)/sqrt(p_data.size());
+	return statcalc::stdev(p_data)/sqrt((stat_t)p_data.size());
+}
+
+#include <iostream>
+statcalc::stat_t statcalc::intNormalDist(stat_t p_mean, stat_t p_sd, stat_t p_df, stat_t p_tstat, bool p_twoTailed) {
+	// OLD VALUES TO GET A POINT ON THE NORMAL DISTRIBUTION
+	// 
+	//constexpr stat_t sqrtPI2 = M_SQRT2 * (2 / M_2_SQRTPI);	// sqrt(2*PI)
+	//constexpr stat_t euler = M_E;
+	//const stat_t var = p_sd* p_sd;
+	//
+	//stat_t x = 0.0;
+	//
+	//const stat_t xMuSq = (x - p_mean)*(x - p_mean);
+	//
+	//stat_t bell = pow(euler, -0.5 * xMuSq / var) / (p_sd * sqrtPI2);
+
+	// This is the integral of a normal distribution's bell curve (shown above)
+	auto F = [&](stat_t x) { return fabs(0.5 * erf((x - p_mean) / (M_SQRT2 * p_sd))); };
+
+	// https://www.desmos.com/calculator/r9jut8vgnn
+	
+	const stat_t upper = F(p_mean - 4*p_sd);
+	const stat_t lower = F(p_mean - p_tstat);
+	std::cout << lower << "\n";
+	const stat_t multi = (p_twoTailed) ? 2.0 : 1.0;
+	const stat_t sum = multi * fabs(lower - upper);
+	return sum;
+}
+
+statcalc::stat_t statcalc::pvalue(stat_t p_df, stat_t p_tstat, bool p_twoTailed) {
+	return intNormalDist(0.0, sqrt(p_df / (p_df - 2)), p_df, p_tstat, p_twoTailed);
 }
 
 // Double VariableSet /////////////////////////////////////////////////
@@ -147,25 +180,13 @@ statcalc::Regression statcalc::regression(const VariableSet& p_x, const Variable
 	ret.b.coeff = (n*sumXY-sumX*sumY)/(n*sumXSq-sumX*sumX);
 	ret.b.error = sqrt(sumOfResY / ((n - 2)*(sumOfResX)));
 	ret.b.t = (ret.b.coeff / ret.b.error);
-	ret.b.p = -INFINITY;	// TODO: ADD P-VALUE
+	ret.b.p = pvalue((stat_t)(n - 1), ret.b.t, true);
 
 	// Scale Co-efficent (a)
 	ret.a.coeff = ((sumY * sumXSq) -( sumX * sumXY)) / ( n*sumXSq - sumX * sumX);
 	ret.a.error = ret.b.error * sqrt(sumXSq/n);
 	ret.a.t = (ret.a.coeff / ret.a.error);
-	ret.b.p = -INFINITY;	// TODO: ADD P-VALUE
-	
-	// P-Value
-	//ret.p = 2*(1 - (0.5 * erfc(-fabs(ret.t) / sqrt(2))));
-	
-	// Residual Sum of Squares
-	//ret.rss = resSumOfSquares;
-
-	// Error
-	//ret.error = sqrt(ret.rss / (n - 2) );
-	
-	// T-Stat
-	//ret.t = b1 / (ret.error / sqrt(varX * (n -1)));
+	ret.a.p = pvalue((stat_t)(n - 1), ret.a.t, true);
 	
 	
 	return ret;

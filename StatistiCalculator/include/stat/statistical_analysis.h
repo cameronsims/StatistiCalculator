@@ -101,6 +101,32 @@ namespace statcalc {
 		 * @returns Standard Error of the data
 		 */
 	stat_t stderror(const VariableSet& p_data);
+
+		/**
+		 * @author Cameron Sims
+		 *
+		 * @fn statcalc::intNormalDist
+		 * @brief Integral of Normal Distribution
+		 * @param p_mean The mean we're using
+		 * @param p_sd The standard deviation
+		 * @param p_df The degrees of freedom
+		 * @param p_tstat The t-statistic
+		 * @param p_twoTailed If the statistic needs two tails
+		 * @returns Area under the bell curve
+		 */
+	stat_t intNormalDist(stat_t p_mean, stat_t p_sd, stat_t p_df, stat_t p_tstat, bool p_twoTailed);
+
+		/**
+		 * @author Cameron Sims
+		 *
+		 * @fn statcalc::pvalue
+		 * @brief Gets the p-value from factors
+		 * @param p_df The degrees of freedom
+		 * @param p_tstat The t-statistic
+		 * @param p_twoTailed If the statistic needs two tails
+		 * @returns Area under the bell curve
+		 */
+	stat_t pvalue(stat_t p_df, stat_t p_tstat, bool p_twoTailed);
 	
 
 

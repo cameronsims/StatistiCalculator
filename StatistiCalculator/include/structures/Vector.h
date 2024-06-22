@@ -2,6 +2,7 @@
 #define VECTOR_H
 
 #include "Exception.h"
+#include <memory>
 
 #define VECTOR_RESIZE(n) ( (size_t)(1.5 * n) + 8 )
 
@@ -174,7 +175,7 @@ void Vector<T>::m_realloc(size_t p_size) {
 
 template<typename T>
 bool Vector<T>::m_inBound(size_t p_index) {
-    return (p_capacity != 0 && this->m_size < p_index);
+    return (m_capacity != 0 && this->m_size < p_index);
 }
 
 
