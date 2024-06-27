@@ -37,11 +37,11 @@ namespace statcalc {
 		 * @brief Used to store a some amount of data
 		 */
 	typedef struct {
-		Vector<std::string> header;
+		Vector<std::wstring> header;
 		Vector<DataColumn> data;
 	} Dataset;
 
-	int Dataset_hasHeader(const Dataset& p_dataset, const std::string& p_hName);
+	int Dataset_hasHeader(const Dataset& p_dataset, const std::wstring& p_hName);
 }
 
 #endif

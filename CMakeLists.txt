@@ -49,8 +49,8 @@ include("${TERMINAL_DIRECTORY}/CMakeLists.txt")
 
 # GUI Directory #######################################################
 
-set(GUI_DIRECTORY "${PROJECT_SOURCE_DIR}/SC_GUI")
-include("${GUI_DIRECTORY}/CMakeLists.txt")
+#set(GUI_DIRECTORY "${PROJECT_SOURCE_DIR}/SC_GUI")
+#include("${GUI_DIRECTORY}/CMakeLists.txt")
 
 
 

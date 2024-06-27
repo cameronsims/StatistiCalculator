@@ -33,7 +33,7 @@ statcalc::stat_t statcalc::mode    (const VariableSet& p_data) {
 	return -INFINITY;
 }
 
-statcalc::stat_t statcalc::min     (const VariableSet& p_data) {
+statcalc::stat_t statcalc::minimum(const VariableSet& p_data) {
 	size_t smallest = 0;
 	for (size_t i = 1; i < p_data.size(); i++) {
 		if (p_data[i] < p_data[smallest]) {
@@ -43,7 +43,7 @@ statcalc::stat_t statcalc::min     (const VariableSet& p_data) {
 	return p_data[smallest];
 }
 
-statcalc::stat_t statcalc::max     (const VariableSet& p_data) {
+statcalc::stat_t statcalc::maximum(const VariableSet& p_data) {
 	size_t biggest = 0;
 	for (size_t i = 1; i < p_data.size(); i++) {
 		if (p_data[i] > p_data[biggest]) {
@@ -111,6 +111,36 @@ statcalc::stat_t statcalc::covariance(const VariableSet& p_x, const VariableSet&
 	
 	return sum / (n - 1);
 }
+
+
+statcalc::StudentTTest statcalc::studentTTest(const VariableSet& p_data, stat_t p_assumeMean, bool p_twoTails) {
+	const stat_t n = p_data.size();
+	const stat_t mean = statcalc::mean(p_data);
+	const stat_t err = stderror(p_data);
+
+	StudentTTest ttest{};
+	ttest.t = (mean - p_assumeMean) / err;
+	ttest.p = pvalue((stat_t)(n - 1), ttest.t, p_twoTails);
+	ttest.error = err;
+
+	return ttest;
+}
+
+statcalc::StudentTTest statcalc::studentTTest(const VariableSet& p_x, const VariableSet& p_y, bool p_twoTails) {
+	const stat_t n = MIN(p_x.size(), p_y.size());
+	const stat_t meanX = statcalc::mean(p_x);
+	const stat_t meanY = statcalc::mean(p_y);
+	const stat_t err   = sqrt((stdev(p_x) * stdev(p_x)) / p_x.size() + (stdev(p_y) * stdev(p_y)) / p_y.size());
+
+	StudentTTest ttest{};
+	ttest.t = (meanX - meanY) / err;
+	ttest.p = pvalue((stat_t)(n - 1), ttest.t, p_twoTails);
+	ttest.error = err;
+
+	return ttest;
+}
+
+
 
 statcalc::PearsonsCoeff statcalc::pcc(const VariableSet& p_x, const VariableSet& p_y) {
 	const size_t n = MIN(p_x.size(), p_y.size());

@@ -1,0 +1,3 @@
+#ifndef SCTERMINAL_FRAMEWORK_H
+#define SCTERMINAL_FRAMEWORK_H
+#endif

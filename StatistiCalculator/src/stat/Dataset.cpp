@@ -1,6 +1,6 @@
 #include <stat/Dataset.h>
 
-int statcalc::Dataset_hasHeader(const Dataset& p_dataset, const std::string& p_hName) {
+int statcalc::Dataset_hasHeader(const Dataset& p_dataset, const std::wstring& p_hName) {
     // If there is no values
     if (p_dataset.header.size() < 1) {
         return -1;

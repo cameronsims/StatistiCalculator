@@ -60,7 +60,7 @@ namespace statcalc {
 		 * @param p_data Gets the lowest data
 		 * @returns The lowest value in the data
 		 */
-	stat_t min     (const VariableSet& p_data);
+	stat_t minimum  (const VariableSet& p_data);
 
 		/**
 		 * @author Cameron Sims
@@ -70,7 +70,7 @@ namespace statcalc {
 		 * @param p_data Gets the highest data
 		 * @returns The highest value in the data
 		 */
-	stat_t max     (const VariableSet& p_data);
+	stat_t maximum  (const VariableSet& p_data);
 	
 		/**
 		 * @author Cameron Sims
@@ -147,6 +147,51 @@ namespace statcalc {
 		 * @returns Co-Variance of p_x and p_y
 		 */
 	stat_t covariance(const VariableSet& p_x, const VariableSet& p_y);
+
+		/**
+		 * @author Cameron Sims
+		 *
+		 * @struct statcalc::PearsonsCoeff
+		 * @brief A collection of data related to the pearsons' coefficient
+		 */
+	typedef struct {
+		/// T value
+		stat_t t;
+
+		/// P-Value
+		stat_t p;
+
+		/// Standard Error
+		stat_t error;
+
+		
+
+	} StudentTTest;
+
+		
+		/**
+		 * @author Cameron Sims
+		 *
+		 * @fn statcalc::studentTTest
+		 * @brief Gets the students t-test between one variable
+		 * @param p_data The sample
+		 * @param p_assumeMean The assumed mean
+		 * @param p_twoTails If we have two tails or not
+		 * @returns A struct of variables for the students' t-test
+		 */
+	StudentTTest studentTTest(const VariableSet& p_data, stat_t p_assumeMean, bool p_twoTails);
+
+		/**
+		 * @author Cameron Sims
+		 *
+		 * @fn statcalc::studentTTest
+		 * @brief Gets the students t-test between two variables
+		 * @param p_x First half of the data
+		 * @param p_y Second half of the data
+		 * @param p_twoTails If we have two tails or not
+		 * @returns A struct of variables for the students' t-test
+		 */
+	StudentTTest studentTTest(const VariableSet& p_x, const VariableSet& p_y, bool p_twoTails);
 		
 		/**
 		 * @author Cameron Sims
